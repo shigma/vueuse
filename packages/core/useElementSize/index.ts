@@ -1,7 +1,7 @@
 import type { MaybeComputedElementRef } from '../unrefElement'
 import type { UseResizeObserverOptions } from '../useResizeObserver'
-import { tryOnMounted } from '@vueuse/shared'
-import { computed, ref, watch } from 'vue-demi'
+import { toArray, tryOnMounted } from '@vueuse/shared'
+import { computed, ref, watch } from 'vue'
 import { defaultWindow } from '../_configurable'
 import { unrefElement } from '../unrefElement'
 import { useResizeObserver } from '../useResizeObserver'
@@ -45,7 +45,7 @@ export function useElementSize(
       }
       else {
         if (boxSize) {
-          const formatBoxSize = Array.isArray(boxSize) ? boxSize : [boxSize]
+          const formatBoxSize = toArray(boxSize)
           width.value = formatBoxSize.reduce((acc, { inlineSize }) => acc + inlineSize, 0)
           height.value = formatBoxSize.reduce((acc, { blockSize }) => acc + blockSize, 0)
         }
