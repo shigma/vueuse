@@ -1,7 +1,7 @@
 import type { MaybeRefOrGetter } from '@vueuse/shared'
-import type { ComputedRef } from 'vue-demi'
-import { noop, toValue } from '@vueuse/shared'
-import { computed, reactive, ref } from 'vue-demi'
+import type { ComputedRef } from 'vue'
+import { noop } from '@vueuse/shared'
+import { computed, reactive, ref, toValue } from 'vue'
 import { defaultWindow } from '../_configurable'
 import { useEventListener } from '../useEventListener'
 import { DefaultMagicKeysAliasMap } from './aliasMap'
@@ -147,8 +147,8 @@ export function useMagicKeys(options: UseMagicKeysOptions<boolean> = {}): any {
   }, { passive })
 
   // #1350
-  useEventListener('blur', reset, { passive: true })
-  useEventListener('focus', reset, { passive: true })
+  useEventListener('blur', reset, { passive })
+  useEventListener('focus', reset, { passive })
 
   const proxy = new Proxy(
     refs,
@@ -165,7 +165,7 @@ export function useMagicKeys(options: UseMagicKeysOptions<boolean> = {}): any {
         if (!(prop in refs)) {
           if (/[+_-]/.test(prop)) {
             const keys = prop.split(/[+_-]/g).map(i => i.trim())
-            refs[prop] = computed(() => keys.every(key => toValue(proxy[key])))
+            refs[prop] = computed(() => keys.map(key => toValue(proxy[key])).every(Boolean))
           }
           else {
             refs[prop] = ref(false)

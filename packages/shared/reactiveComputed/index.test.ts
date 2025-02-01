@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest'
-import { isVue2, nextTick, ref, watch, watchEffect } from 'vue-demi'
+import { nextTick, ref, watch, watchEffect } from 'vue'
 import { reactiveComputed } from '.'
 
 describe('reactiveComputed', () => {
@@ -48,11 +48,33 @@ describe('reactiveComputed', () => {
     expect(state.foo).toBe(true)
     expect(state.bar).toBe(undefined)
 
-    if (!isVue2) {
-      await nextTick()
+    await nextTick()
 
-      expect(dummy).toBe(1)
-      expect(type).toBe('foo')
-    }
+    expect(dummy).toBe(1)
+    expect(type).toBe('foo')
+  })
+
+  it('should allow for previous value access (for vue 3.4+)', () => {
+    const test = ref(0)
+
+    const obj = reactiveComputed<{ test: number, num: number }>(
+      prev => ({ test: test.value, num: (prev?.num ?? 2) }),
+    )
+
+    obj.num = 5
+    expect(obj).toMatchInlineSnapshot(`
+      {
+        "num": 5,
+        "test": 0,
+      }
+    `)
+
+    test.value = 1
+    expect(obj).toMatchInlineSnapshot(`
+      {
+        "num": 5,
+        "test": 1,
+      }
+    `)
   })
 })

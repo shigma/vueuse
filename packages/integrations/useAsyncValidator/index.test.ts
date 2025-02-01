@@ -1,7 +1,7 @@
 import type { Rules } from 'async-validator'
-import type { Ref } from 'vue-demi'
+import type { Ref } from 'vue'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { nextTick, ref } from 'vue-demi'
+import { nextTick, ref } from 'vue'
 import { useAsyncValidator } from '.'
 
 describe('useAsyncValidator', () => {
@@ -291,7 +291,10 @@ describe('set manual true', () => {
       },
     }) as Ref<Rules>
 
-    const { execute, pass, errors } = useAsyncValidator(form, rules, { manual: true })
+    const { execute, pass, errors } = useAsyncValidator(form, rules, {
+      manual: true,
+      validateOption: { suppressWarning: true },
+    })
 
     expect(pass.value).toBe(true)
     expect(errors.value).toMatchObject([])

@@ -1,5 +1,5 @@
 import { isClient, useDebounceFn } from '@vueuse/shared'
-import { ref } from 'vue-demi'
+import { ref } from 'vue'
 import { useCssVar } from '../useCssVar'
 import { useEventListener } from '../useEventListener'
 
@@ -32,7 +32,7 @@ export function useScreenSafeArea() {
 
     update()
 
-    useEventListener('resize', useDebounceFn(update))
+    useEventListener('resize', useDebounceFn(update), { passive: true })
   }
 
   function update() {

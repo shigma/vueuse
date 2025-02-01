@@ -1,5 +1,5 @@
 import type { ConfigurableWindow } from '../_configurable'
-import { ref } from 'vue-demi'
+import { ref } from 'vue'
 import { defaultWindow } from '../_configurable'
 import { useEventListener } from '../useEventListener'
 import { useSupported } from '../useSupported'
@@ -39,7 +39,7 @@ export function useScreenOrientation(options: ConfigurableWindow = {}) {
     useEventListener(window, 'orientationchange', () => {
       orientation.value = screenOrientation.type
       angle.value = screenOrientation.angle
-    })
+    }, { passive: true })
   }
 
   const lockOrientation = (type: OrientationLockType) => {

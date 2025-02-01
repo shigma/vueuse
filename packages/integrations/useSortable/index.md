@@ -8,6 +8,10 @@ Wrapper for [`sortable`](https://github.com/SortableJS/Sortable).
 
 For more information on what options can be passed, see [`Sortable.options`](https://github.com/SortableJS/Sortable#options) in the `Sortable` documentation.
 
+::: warning
+Currently, `useSortable` only implements drag-and-drop sorting for a single list.
+:::
+
 ## Install
 
 ```bash
@@ -21,9 +25,9 @@ npm i sortablejs@^1
 ```vue
 <script setup lang="ts">
 import { useSortable } from '@vueuse/integrations/useSortable'
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 
-const el = ref<HTMLElement | null>(null)
+const el = useTemplateRef<HTMLElement>('el')
 const list = ref([{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 3, name: 'c' }])
 
 useSortable(el, list)
@@ -43,9 +47,9 @@ useSortable(el, list)
 ```vue
 <script setup lang="ts">
 import { useSortable } from '@vueuse/integrations/useSortable'
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 
-const el = ref<HTMLElement | null>(null)
+const el = useTemplateRef<HTMLElement>('el')
 const list = ref([{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 3, name: 'c' }])
 
 const animation = 200
@@ -102,7 +106,7 @@ import { moveArrayElement } from '@vueuse/integrations/useSortable'
 useSortable(el, list, {
   onUpdate: (e) => {
     // do something
-    moveArrayElement(list.value, e.oldIndex, e.newIndex)
+    moveArrayElement(list.value, e.oldIndex, e.newIndex, e)
     // nextTick required here as moveArrayElement is executed in a microtask
     // so we need to wait until the next tick until that is finished.
     nextTick(() => {
