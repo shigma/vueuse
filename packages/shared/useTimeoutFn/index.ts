@@ -1,16 +1,22 @@
 import type { AnyFn, MaybeRefOrGetter, Stoppable } from '../utils'
-import { readonly, ref } from 'vue-demi'
-import { toValue } from '../toValue'
+import { readonly, ref, toValue } from 'vue'
 import { tryOnScopeDispose } from '../tryOnScopeDispose'
 import { isClient } from '../utils'
 
 export interface UseTimeoutFnOptions {
   /**
-   * Start the timer immediate after calling this function
+   * Start the timer immediately
    *
    * @default true
    */
   immediate?: boolean
+
+  /**
+   * Execute the callback immediately after calling `start`
+   *
+   * @default false
+   */
+  immediateCallback?: boolean
 }
 
 /**
@@ -27,6 +33,7 @@ export function useTimeoutFn<CallbackFn extends AnyFn>(
 ): Stoppable<Parameters<CallbackFn> | []> {
   const {
     immediate = true,
+    immediateCallback = false,
   } = options
 
   const isPending = ref(false)
@@ -46,6 +53,8 @@ export function useTimeoutFn<CallbackFn extends AnyFn>(
   }
 
   function start(...args: Parameters<CallbackFn> | []) {
+    if (immediateCallback)
+      cb()
     clear()
     isPending.value = true
     timer = setTimeout(() => {

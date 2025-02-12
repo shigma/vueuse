@@ -26,7 +26,23 @@ onClickOutside(target, event => console.log(event))
 </template>
 ```
 
-> This function uses [Event.composedPath()](https://developer.mozilla.org/en-US/docs/Web/API/Event/composedPath) which is NOT supported by IE 11, Edge 18 and below. If you are targeting these browsers, we recommend you to include [this code snippet](https://gist.github.com/sibbng/13e83b1dd1b733317ce0130ef07d4efd) on your project.
+If you need more control over triggering the handler, you can use the `controls` option.
+
+```ts
+const { cancel, trigger } = onClickOutside(
+  modalRef,
+  (event) => {
+    modal.value = false
+  },
+  { controls: true },
+)
+
+useEventListener('pointermove', (e) => {
+  cancel()
+  // or
+  trigger(e)
+})
+```
 
 ## Component Usage
 

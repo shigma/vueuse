@@ -1,7 +1,7 @@
-import type { Ref } from 'vue-demi'
+import type { ComputedRef, Ref } from 'vue'
 import type { ConfigurableNavigator } from '../_configurable'
 import { createSingletonPromise } from '@vueuse/shared'
-import { shallowRef, toRaw } from 'vue-demi'
+import { shallowRef, toRaw } from 'vue'
 import { defaultNavigator } from '../_configurable'
 import { useEventListener } from '../useEventListener'
 import { useSupported } from '../useSupported'
@@ -40,7 +40,7 @@ export interface UsePermissionOptions<Controls extends boolean> extends Configur
 export type UsePermissionReturn = Readonly<Ref<PermissionState | undefined>>
 export interface UsePermissionReturnWithControls {
   state: UsePermissionReturn
-  isSupported: Ref<boolean>
+  isSupported: ComputedRef<boolean>
   query: () => Promise<PermissionStatus | undefined>
 }
 
@@ -78,7 +78,7 @@ export function usePermission(
     state.value = permissionStatus.value?.state ?? 'prompt'
   }
 
-  useEventListener(permissionStatus, 'change', update)
+  useEventListener(permissionStatus, 'change', update, { passive: true })
 
   const query = createSingletonPromise(async () => {
     if (!isSupported.value)

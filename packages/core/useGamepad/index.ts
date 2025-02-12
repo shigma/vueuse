@@ -1,7 +1,7 @@
-import type { Ref } from 'vue-demi'
+import type { Ref } from 'vue'
 import type { ConfigurableNavigator, ConfigurableWindow } from '../_configurable'
 import { createEventHook, tryOnMounted } from '@vueuse/shared'
-import { computed, ref } from 'vue-demi'
+import { computed, ref } from 'vue'
 import { defaultNavigator } from '../_configurable'
 import { useEventListener } from '../useEventListener'
 import { useRafFn } from '../useRafFn'
@@ -119,8 +119,9 @@ export function useGamepad(options: UseGamepadOptions = {}) {
     onDisconnectedHook.trigger(gamepad.index)
   }
 
-  useEventListener('gamepadconnected', e => onGamepadConnected(e.gamepad))
-  useEventListener('gamepaddisconnected', e => onGamepadDisconnected(e.gamepad))
+  const listenerOptions = { passive: true }
+  useEventListener('gamepadconnected', e => onGamepadConnected(e.gamepad), listenerOptions)
+  useEventListener('gamepaddisconnected', e => onGamepadDisconnected(e.gamepad), listenerOptions)
 
   tryOnMounted(() => {
     const _gamepads = navigator?.getGamepads() || []

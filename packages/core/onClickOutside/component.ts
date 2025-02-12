@@ -1,10 +1,10 @@
 import type { OnClickOutsideOptions } from '.'
 import type { RenderableComponent } from '../types'
 import { onClickOutside } from '@vueuse/core'
-import { defineComponent, h, ref } from 'vue-demi'
+import { defineComponent, h, ref } from 'vue'
 
 export interface OnClickOutsideProps extends RenderableComponent {
-  options?: OnClickOutsideOptions
+  options?: Omit<OnClickOutsideOptions, 'controls'>
 }
 
 export const OnClickOutside = /* #__PURE__ */ defineComponent<OnClickOutsideProps>({

@@ -1,8 +1,8 @@
 /* this implementation is original ported from https://github.com/logaretm/vue-use-web by Abdelrahman Awad */
 
-import type { ComputedRef, Ref } from 'vue-demi'
+import type { ComputedRef, Ref } from 'vue'
 import type { ConfigurableNavigator } from '../_configurable'
-import { computed, ref } from 'vue-demi'
+import { computed, ref } from 'vue'
 import { defaultNavigator } from '../_configurable'
 import { useEventListener } from '../useEventListener'
 import { usePermission } from '../usePermission'
@@ -35,7 +35,7 @@ export interface UseDevicesListReturn {
   audioOutputs: ComputedRef<MediaDeviceInfo[]>
   permissionGranted: Ref<boolean>
   ensurePermissions: () => Promise<boolean>
-  isSupported: Ref<boolean>
+  isSupported: ComputedRef<boolean>
 }
 
 /**
@@ -104,7 +104,7 @@ export function useDevicesList(options: UseDevicesListOptions = {}): UseDevicesL
     if (requestPermissions)
       ensurePermissions()
 
-    useEventListener(navigator!.mediaDevices, 'devicechange', update)
+    useEventListener(navigator!.mediaDevices, 'devicechange', update, { passive: true })
     update()
   }
 
